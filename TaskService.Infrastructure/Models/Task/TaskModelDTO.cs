@@ -13,6 +13,6 @@ namespace TaskService.Infrastructure.Models.Task
         public string Description { get; set; }
         public bool IsComplete { get; set; }
         public bool IsActive { get; set; }
-        public DateTime? CompletedTimeStamp { get; set; } 
+        public DateTime? CompletedTimeStamp { get; set; }
     }
 }

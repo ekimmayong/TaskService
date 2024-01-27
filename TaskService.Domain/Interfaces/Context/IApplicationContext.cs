@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace TaskService.Domain.Interfaces.Context
     {
         DbSet<TaskModel> Tasks { get; set; }
 
-        Task<int> SaveChanges();
+        Task<int> SaveChangesAsync();
+        EntityEntry<T> Entry<T>(T entity) where T : class;
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         void SetModified(object entity);
     }

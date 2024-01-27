@@ -20,7 +20,7 @@ namespace TaskService.Domain.Services
         public async Task CreateNewTask(TaskModel model)
         {
             await _taskRepository.AddAsync(model);
-            await _taskRepository.SaveAsync();
+            await _taskRepository.SaveChangesAsync();
         }
 
         public async Task DeleteTask(int id)
@@ -43,11 +43,16 @@ namespace TaskService.Domain.Services
             return await _taskRepository.GetByIdAsync(id);
         }
 
-        public async Task<TaskModel> UpdateTask(TaskModel model)
+        public async Task<TaskModel> UpdateTask(int id, TaskModel model)
         {
-            var item = await _taskRepository.GetByIdAsync(model.Id);
+            var item = await _taskRepository.GetByIdAsync(id);
             if(item != null)
             {
+                item.TaskName = model.TaskName;
+                item.Description = model.Description;
+                item.IsComplete = model.IsComplete;
+                item.IsActive = model.IsActive;
+
                 await _taskRepository.UpdateAsync(item);
                 await _taskRepository.SaveAsync();
             }

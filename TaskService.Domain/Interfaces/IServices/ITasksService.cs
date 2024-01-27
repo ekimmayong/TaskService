@@ -16,7 +16,7 @@ namespace TaskService.Domain.Interfaces.IServices
 
         Task DeleteTask(int id);
 
-        Task<TaskModel> UpdateTask(TaskModel model);
+        Task<TaskModel> UpdateTask(int id, TaskModel model);
 
         Task<string> MarkTaskCompleted(int id);
     }

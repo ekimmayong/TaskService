@@ -4,6 +4,7 @@ using TaskService.Domain.Interfaces.IServices;
 namespace TaskService.Controllers
 {
     [Route("api/auth")]
+    [ApiController]
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;

@@ -8,6 +8,7 @@ using TaskService.Infrastructure.Models.Task;
 namespace TaskService.Controllers
 {
     [Route("api/task")]
+    [ApiController]
     [Authorize]
     public class TaskController : ControllerBase
     {
@@ -31,7 +32,7 @@ namespace TaskService.Controllers
         }
 
         [HttpGet]
-        [Route("get-task-by-id")]
+        [Route("get-task/{id}")]
         public async Task<IActionResult> GetTaskById(int id)
         {
             var task = await _taskService.GetTaskById(id);
@@ -42,7 +43,7 @@ namespace TaskService.Controllers
 
         [HttpPost]
         [Route("create-task")]
-        public async Task<IActionResult> CeateNewTask(TaskModelDTO model)
+        public async Task<IActionResult> CreateNewTask(TaskModelDTO model)
         {
             if(ModelState.IsValid)
             {
@@ -57,13 +58,13 @@ namespace TaskService.Controllers
         }
 
         [HttpPut]
-        [Route("update-task")]
-        public async Task<IActionResult> UpdateTask(TaskModelDTO model)
+        [Route("update-task/{id}")]
+        public async Task<IActionResult> UpdateTask(int id, TaskModelDTO model)
         {
             if(ModelState.IsValid)
             {
                 var task = _mapper.Map<TaskModel>(model);
-                var response = await _taskService.UpdateTask(task);
+                var response = await _taskService.UpdateTask(id, task);
 
                 return Ok(response);
             }
@@ -72,10 +73,19 @@ namespace TaskService.Controllers
         }
 
         [HttpPatch]
-        [Route("mark-task-completed")]
+        [Route("mark-task-completed/{id}")]
         public async Task<IActionResult> MarkTaskCompleted(int id)
         {
             await _taskService.MarkTaskCompleted(id);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("delete-task/{id}")]
+        public async Task<IActionResult> DeleteTask(int id)
+        {
+            await _taskService.DeleteTask(id);
 
             return Ok();
         }

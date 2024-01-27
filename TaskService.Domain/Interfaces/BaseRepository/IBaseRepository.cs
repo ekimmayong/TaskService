@@ -10,7 +10,7 @@ namespace TaskService.Domain.Interfaces.BaseRepository
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
-        Task<int> SaveAsync();
+        Task<int> SaveChangesAsync();
         void SetModified(object entity);
     }
 }

@@ -23,7 +23,7 @@ namespace TaskService.Infrastructure.Context
             this.Entry(entity).State = EntityState.Modified;
         }
 
-        async Task<int> IApplicationContext.SaveChanges()
+        public override async Task<int> SaveChangesAsync()
         {
             return await SaveChangesAsync();
         }

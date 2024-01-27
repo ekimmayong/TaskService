@@ -40,7 +40,9 @@ namespace TaskService.Infrastructure.Repositories
 
         public Task UpdateAsync(T entity)
         {
-            _context.Set<T>().Update(entity);
+
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             return Task.CompletedTask;
         }
 
@@ -50,9 +52,9 @@ namespace TaskService.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task<int> SaveAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
 
         public void SetModified(object entity)

@@ -16,5 +16,6 @@ namespace TaskService.Domain.Models
         public bool IsComplete { get; set; }
         public bool IsActive { get; set; }
         public DateTime? CompletedTimeStamp { get; set; }
+        public DateTime UpdateTimeStamp { get; set; } = DateTime.UtcNow;
     }
 }
