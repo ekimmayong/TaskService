@@ -29,7 +29,7 @@ namespace TaskService.Domain.Services
             if(item != null)
             {
                 await _taskRepository.DeleteAsync(item);
-                await _taskRepository.SaveAsync();
+                await _taskRepository.SaveChangesAsync();
             }
         }
 
@@ -52,9 +52,10 @@ namespace TaskService.Domain.Services
                 item.Description = model.Description;
                 item.IsComplete = model.IsComplete;
                 item.IsActive = model.IsActive;
+                item.RowVersion = Encoding.ASCII.GetBytes(DateTime.UtcNow.ToString());
 
-                await _taskRepository.UpdateAsync(item);
-                await _taskRepository.SaveAsync();
+                await _taskRepository.UpdateAsync(item, model.RowVersion);
+                await _taskRepository.SaveChangesAsync();
             }
 
             return model;
@@ -70,7 +71,7 @@ namespace TaskService.Domain.Services
                 item.CompletedTimeStamp = DateTime.UtcNow;
 
                 _taskRepository.SetModified(item);
-                await _taskRepository.SaveAsync();
+                await _taskRepository.SaveChangesAsync();
 
                 return "Task Completed";
             }

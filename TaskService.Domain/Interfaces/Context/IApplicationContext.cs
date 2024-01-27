@@ -13,7 +13,7 @@ namespace TaskService.Domain.Interfaces.Context
     {
         DbSet<TaskModel> Tasks { get; set; }
 
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
         EntityEntry<T> Entry<T>(T entity) where T : class;
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         void SetModified(object entity);

@@ -38,11 +38,10 @@ namespace TaskService.Infrastructure.Repositories
             return await _context.Set<T>().FindAsync(Id);
         }
 
-        public Task UpdateAsync(T entity)
+        public Task UpdateAsync(T entity, byte[] rowVersion)
         {
-
             _context.Set<T>().Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entity).Property("RowVersion").OriginalValue = rowVersion;
             return Task.CompletedTask;
         }
 
@@ -52,9 +51,9 @@ namespace TaskService.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync(cancellationToken);
         }
 
         public void SetModified(object entity)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using TaskService.Domain.Interfaces.IServices;
 using TaskService.Domain.Models;
 using TaskService.Infrastructure.Models.Task;
@@ -45,7 +46,7 @@ namespace TaskService.Controllers
         [Route("create-task")]
         public async Task<IActionResult> CreateNewTask(TaskModelDTO model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var response = _mapper.Map<TaskModel>(model);
 

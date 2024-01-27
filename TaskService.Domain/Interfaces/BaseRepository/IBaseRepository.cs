@@ -8,9 +8,9 @@ namespace TaskService.Domain.Interfaces.BaseRepository
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetByIdAsync(int Id);
         Task<T> AddAsync(T entity);
-        Task UpdateAsync(T entity);
+        Task UpdateAsync(T entity, byte[] rowVersion);
         Task DeleteAsync(T entity);
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
         void SetModified(object entity);
     }
 }

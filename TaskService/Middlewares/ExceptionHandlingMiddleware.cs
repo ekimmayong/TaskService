@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Data;
 using System.Net;
 using TaskService.Infrastructure.Models.Exceptions;
@@ -23,6 +24,10 @@ namespace TaskService.Middlewares
             try
             {
                 await _next(context);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw GetServiceException(ex);
             }
             catch(AggregateException ex)
             {
@@ -64,9 +69,9 @@ namespace TaskService.Middlewares
                 return GetServiceException(exception);
             }
 
-            if(ex is DBConcurrencyException dBConcurrencyException)
+            if(ex is OutOfMemoryException memoryException)
             {
-                return GetServiceException(dBConcurrencyException);
+                return GetServiceException(memoryException);
             }
 
             _logger.LogInformation(ex, "Unhandled Exception");
@@ -84,12 +89,23 @@ namespace TaskService.Middlewares
             return serviceException;
         }
 
-        private ServiceException GetServiceException(DBConcurrencyException ex)
+        private ServiceException GetServiceException(DbUpdateConcurrencyException ex)
         {
             _logger.LogInformation("Concurrency conflict occured.");
             var response = new ServiceException(ex.Message, ex)
             {
                 StatusCode = (int)HttpStatusCode.Conflict,
+            };
+
+            return response;
+        }
+
+        private ServiceException GetServiceException(OutOfMemoryException ex)
+        {
+            _logger.LogInformation("Out of memory");
+            var response = new ServiceException(ex.Message, ex)
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError
             };
 
             return response;

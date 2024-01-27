@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskService.Infrastructure.Models.BaseModel;
 
 namespace TaskService.Infrastructure.Models.Task
 {
-    public class TaskModelDTO
+    public class TaskModelDTO: BaseEntity
     {
         public int Id { get; set; }
         public string TaskName { get; set; }

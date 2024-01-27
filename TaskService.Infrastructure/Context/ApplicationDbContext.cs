@@ -23,9 +23,9 @@ namespace TaskService.Infrastructure.Context
             this.Entry(entity).State = EntityState.Modified;
         }
 
-        public override async Task<int> SaveChangesAsync()
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await SaveChangesAsync();
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
