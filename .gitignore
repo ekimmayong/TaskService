@@ -1,0 +1,13 @@
+﻿.vs/
+
+appsettings.json
+appsettings.Development.json
+
+[Rr]elease/
+[Rr]eleases/
+[Dd]ebug/
+x64/
+x86/
+[Oo]bj/
+[Bb]in/
+[Ll]og/
