@@ -6,17 +6,17 @@ using TaskService.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration IOptions
+// COnfigure JWT
 builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection(JwtConfiguration.ConfigurationName));
 
 builder.Services.AddOptions<JwtConfiguration>()
     .Bind(builder.Configuration.GetSection(JwtConfiguration.ConfigurationName))
     .ValidateDataAnnotations();
 
-// configure dbcontext
+// DBContext Configuration
 builder.Services.AddDbContextConfiguration();
 
-// Implement dependency injections
+// dependency injections implementation
 builder.Services.AddApplicationDependencyInjection();
 builder.Services.AddAuthorizationExtension(builder.Configuration);
 

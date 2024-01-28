@@ -9,7 +9,7 @@ namespace TaskService.Domain.Interfaces.IServices
 {
     public interface ITasksService
     {
-        Task CreateNewTask(TaskModel model);
+        Task<TaskModel> CreateNewTask(TaskModel model);
         Task<IEnumerable<TaskModel>> GetAllTasks();
 
         Task<TaskModel?> GetTaskById(int id);

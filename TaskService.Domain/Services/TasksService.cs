@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using TaskService.Domain.Interfaces.BaseRepository;
@@ -17,10 +18,12 @@ namespace TaskService.Domain.Services
             _taskRepository = taskRepository;
         }
 
-        public async Task CreateNewTask(TaskModel model)
+        public async Task<TaskModel> CreateNewTask(TaskModel model)
         {
-            await _taskRepository.AddAsync(model);
+            var result = await _taskRepository.AddAsync(model);
             await _taskRepository.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task DeleteTask(int id)
@@ -69,6 +72,7 @@ namespace TaskService.Domain.Services
             {
                 item.IsComplete = true;
                 item.CompletedTimeStamp = DateTime.UtcNow;
+                item.RowVersion = Encoding.ASCII.GetBytes(DateTime.UtcNow.ToString());
 
                 _taskRepository.SetModified(item);
                 await _taskRepository.SaveChangesAsync();

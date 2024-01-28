@@ -50,9 +50,9 @@ namespace TaskService.Controllers
             {
                 var response = _mapper.Map<TaskModel>(model);
 
-                await _taskService.CreateNewTask(response);
+                var result = await _taskService.CreateNewTask(response);
 
-                return Ok(response);
+                return Ok(result);
             }
 
             return BadRequest();
