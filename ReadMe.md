@@ -1,10 +1,10 @@
 # Task Monitoring
 
-## About the Project
-This project is create using ASP .Net core 7.0 using InMemory Database.
-used to Create, Read, Update and Delete Task
+### About the Project
+This project is created using ASP .Net core 7.0 with InMemory Database.
+Used to Create, Read, Update and Delete Task.
 
-## Testing the project
+### Run and Test the project
 - Run Build to install packages
 - Create appsettings.json first
 - Add JWT configuration
@@ -17,3 +17,4 @@ used to Create, Read, Update and Delete Task
     }
   }
   ```
+
