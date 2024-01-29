@@ -20,6 +20,7 @@ namespace TaskService.Domain.Services
 
         public async Task<TaskModel> CreateNewTask(TaskModel model)
         {
+
             var result = await _taskRepository.AddAsync(model);
             await _taskRepository.SaveChangesAsync();
 

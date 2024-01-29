@@ -9,7 +9,7 @@ namespace TaskService.Infrastructure.Models.BaseModel
 {
     public class BaseEntity
     {
-        public string RowVersion { get; set; }
+        public string? RowVersion { get; set; } = DateTime.UtcNow.ToString();
         public DateTime UpdateTimeStamp { get; set; } = DateTime.UtcNow;
     }
 }
