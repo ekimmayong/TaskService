@@ -27,7 +27,7 @@ namespace TaskService.Middlewares
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                throw GetServiceException(ex);
+                HandleConcurrencyException(context, ex);
             }
             catch(AggregateException ex)
             {
@@ -89,15 +89,29 @@ namespace TaskService.Middlewares
             return serviceException;
         }
 
-        private ServiceException GetServiceException(DbUpdateConcurrencyException ex)
+        private static void HandleConcurrencyException(HttpContext context, DbUpdateConcurrencyException ex)
         {
-            _logger.LogInformation("Concurrency conflict occured.");
-            var response = new ServiceException(ex.Message, ex)
+            var response = context.Response;
+            response.StatusCode = (int)HttpStatusCode.Conflict;
+            response.ContentType = "application/json";
+
+            var errorMessage = new
             {
-                StatusCode = (int)HttpStatusCode.Conflict,
+                error = "Concurrency Conflict",
+                message = "Conflict Detected. Another user may have updated the data.",
+                conflicDetails = ex.Entries.Select(entry => new
+                {
+                    entry.Entity.GetType().FullName,
+                    OriginalValues = entry.OriginalValues.Properties.ToDictionary(p => p.Name, p => entry.OriginalValues[p]),
+                    CurrentValues = entry.CurrentValues.Properties.ToDictionary(p => p.Name, p => entry.CurrentValues[p])
+                })
             };
 
-            return response;
+            var jsonResponse = JsonConvert.SerializeObject(errorMessage, Formatting.None, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            });
+            response.WriteAsync(jsonResponse);
         }
 
         private ServiceException GetServiceException(OutOfMemoryException ex)
