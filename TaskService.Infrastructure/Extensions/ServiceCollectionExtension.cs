@@ -16,6 +16,7 @@ namespace TaskService.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
     {
+        // Extends IServiceCollection by adding Db Context Configurations
         public static void AddDbContextConfiguration(this IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -24,6 +25,7 @@ namespace TaskService.Infrastructure.Extensions
             });
         }
 
+        // Extends IServiceCollection by Adding Authentication and Authorization configuration
         public static void AddAuthorizationExtension(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
@@ -46,6 +48,7 @@ namespace TaskService.Infrastructure.Extensions
             });
         }
 
+        // Configure and register Dependency injection
         public static IServiceCollection AddApplicationDependencyInjection(this IServiceCollection services)
         {
             // Context DI

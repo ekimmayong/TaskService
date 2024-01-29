@@ -27,10 +27,12 @@ namespace TaskService.Middlewares
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                // Call HandleConcurrencyException method
                 HandleConcurrencyException(context, ex);
             }
-            catch(AggregateException ex)
+            catch(AggregateException ex) 
             {
+                // Retrieves a collection of Inner Exceptions from ApplicationException Method
                 var serviceException = ex.InnerExceptions.Select(eitem => ApplicationException(eitem)).First();
                 throw serviceException;
             }
@@ -45,12 +47,14 @@ namespace TaskService.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
+            // Log Exception Details
             var errorResponse = new
             {
                 Message = "An error occured while processing your request.",
                 ExceptionMessage = exception.Message,
                 ExceptionDetails = exception
             };
+
             _logger.LogInformation(exception, "Error Exception");
 
             await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse,
@@ -62,13 +66,16 @@ namespace TaskService.Middlewares
             );
         }
 
+        // Handle multiple exceptions called from the AggregateException
         private ServiceException ApplicationException(Exception ex)
         {
+            // Handle UnAuthorize Exception
             if(ex is UnauthorizedAccessException exception)
             {
                 return GetServiceException(exception);
             }
 
+            // Handle OutOfMemory Exception
             if(ex is OutOfMemoryException memoryException)
             {
                 return GetServiceException(memoryException);
@@ -89,12 +96,14 @@ namespace TaskService.Middlewares
             return serviceException;
         }
 
+        //Handle DbUpdateConcurrencyException
         private static void HandleConcurrencyException(HttpContext context, DbUpdateConcurrencyException ex)
         {
             var response = context.Response;
             response.StatusCode = (int)HttpStatusCode.Conflict;
             response.ContentType = "application/json";
 
+            // log Conflict details
             var errorMessage = new
             {
                 error = "Concurrency Conflict",
@@ -107,10 +116,13 @@ namespace TaskService.Middlewares
                 })
             };
 
-            var jsonResponse = JsonConvert.SerializeObject(errorMessage, Formatting.None, new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            });
+            var jsonResponse = JsonConvert.SerializeObject(errorMessage,
+                Formatting.None,
+                new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                });
+
             response.WriteAsync(jsonResponse);
         }
 

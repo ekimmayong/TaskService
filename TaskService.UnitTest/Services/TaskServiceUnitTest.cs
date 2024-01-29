@@ -34,6 +34,8 @@ namespace TaskService.UnitTest.Services
         {
             //Arrange
             var mockTask = _fixture.Create<TaskModel>();
+
+            // Set mock behavior for AddAsync
             _taskRepositoryMock.Setup(x => x.AddAsync(mockTask)).ReturnsAsync(mockTask);
 
             //Act
@@ -50,6 +52,7 @@ namespace TaskService.UnitTest.Services
         {
             //Arrange
             var mockTask = _fixture.Create<IEnumerable<TaskModel>>();
+            //Setup mock behavior for GetAllAsync
             _taskRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(mockTask);
 
             //Act
@@ -66,6 +69,7 @@ namespace TaskService.UnitTest.Services
         {
             //Arrange
             IEnumerable<TaskModel> mockTask = Enumerable.Empty<TaskModel>();
+            //Setup mock behavior for GetAllAsync
             _taskRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(mockTask);
 
             //Act

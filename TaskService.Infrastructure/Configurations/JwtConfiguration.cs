@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskService.Infrastructure.Configurations
 {
+    // JWT Configuration properties
     public class JwtConfiguration
     {
         public const string ConfigurationName = "JWT";
