@@ -21,7 +21,7 @@ namespace TaskService.Infrastructure.Models
                 .ForMember(x => x.IsActive, opt => opt.MapFrom(c => c.IsActive))
                 .ForMember(x => x.CompletedTimeStamp, opt => opt.MapFrom(c => c.CompletedTimeStamp))
                 .ForMember(x => x.UpdateTimeStamp, opt => opt.MapFrom(c => c.UpdateTimeStamp))
-                .ForMember(x => x.RowVersion, opt => opt.MapFrom(c => Encoding.ASCII.GetString(c.RowVersion)));
+                .ForMember(x => x.RowVersion, opt => opt.MapFrom(c => DateTime.Parse(Encoding.ASCII.GetString(c.RowVersion)).ToString("yyyy-MM-dd HH:mm:sss")));
 
             CreateMap<TaskModelDTO, TaskModel>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(c => c.Id))
@@ -31,7 +31,7 @@ namespace TaskService.Infrastructure.Models
                 .ForMember(x => x.IsActive, opt => opt.MapFrom(c => c.IsActive))
                 .ForMember(x => x.CompletedTimeStamp, opt => opt.MapFrom(c => c.CompletedTimeStamp))
                 .ForMember(x => x.UpdateTimeStamp, opt => opt.MapFrom(c => c.UpdateTimeStamp))
-                .ForMember(x => x.RowVersion, opt => opt.MapFrom(c => Encoding.ASCII.GetBytes(c.RowVersion)));
+                .ForMember(x => x.RowVersion, opt => opt.MapFrom(c => Encoding.ASCII.GetBytes(DateTime.Parse(c.RowVersion).ToString())));
         }
     }
 }

@@ -18,6 +18,6 @@ namespace TaskService.Domain.Interfaces.IServices
 
         Task<TaskModel> UpdateTask(int id, TaskModel model);
 
-        Task<string> MarkTaskCompleted(int id);
+        Task<string> MarkTaskCompleted(int id, string rowVersion);
     }
 }

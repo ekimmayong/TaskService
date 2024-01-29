@@ -56,8 +56,9 @@ namespace TaskService.Infrastructure.Repositories
             return await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public void SetModified(object entity)
+        public void SetModified(object entity, byte[] rowVersion)
         {
+            _context.Entry(entity).Property("RowVersion").OriginalValue = rowVersion;
             _context.SetModified(entity);
         }
     }

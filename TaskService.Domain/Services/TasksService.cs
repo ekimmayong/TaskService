@@ -64,9 +64,10 @@ namespace TaskService.Domain.Services
             return model;
         }
 
-        public async Task<string> MarkTaskCompleted(int id)
+        public async Task<string> MarkTaskCompleted(int id, string rowVersion)
         {
             var item = await _taskRepository.GetByIdAsync(id);
+            byte[] rowVersionConvert = Encoding.ASCII.GetBytes(DateTime.Parse(rowVersion).ToString());
 
             if(item != null && item.IsComplete != true)
             {
@@ -74,7 +75,7 @@ namespace TaskService.Domain.Services
                 item.CompletedTimeStamp = DateTime.UtcNow;
                 item.RowVersion = Encoding.ASCII.GetBytes(DateTime.UtcNow.ToString());
 
-                _taskRepository.SetModified(item);
+                _taskRepository.SetModified(item, rowVersionConvert);
                 await _taskRepository.SaveChangesAsync();
 
                 return "Task Completed";

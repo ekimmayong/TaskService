@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.Swagger.Annotations;
 using System.Text;
 using TaskService.Domain.Interfaces.IServices;
 using TaskService.Domain.Models;
@@ -24,6 +25,9 @@ namespace TaskService.Controllers
 
         [HttpGet]
         [Route("get-all-task")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<TaskModelDTO>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetAllTask()
         {
             var tasks = await _taskService.GetAllTasks();
@@ -34,6 +38,9 @@ namespace TaskService.Controllers
 
         [HttpGet]
         [Route("get-task/{id}")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TaskModelDTO))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetTaskById(int id)
         {
             var task = await _taskService.GetTaskById(id);
@@ -44,6 +51,9 @@ namespace TaskService.Controllers
 
         [HttpPost]
         [Route("create-task")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TaskModelDTO))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateNewTask(TaskModelDTO model)
         {
             if (ModelState.IsValid)
@@ -52,7 +62,8 @@ namespace TaskService.Controllers
 
                 var result = await _taskService.CreateNewTask(response);
 
-                return Ok(result);
+                var mapResponse = _mapper.Map<TaskModelDTO>(result);
+                return Ok(mapResponse);
             }
 
             return BadRequest();
@@ -60,6 +71,10 @@ namespace TaskService.Controllers
 
         [HttpPut]
         [Route("update-task/{id}")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TaskModelDTO))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateTask(int id, TaskModelDTO model)
         {
             if(ModelState.IsValid)
@@ -67,23 +82,29 @@ namespace TaskService.Controllers
                 var task = _mapper.Map<TaskModel>(model);
                 var response = await _taskService.UpdateTask(id, task);
 
-                return Ok(response);
+                var mapResponse = _mapper.Map<TaskModelDTO>(response);
+                return Ok(mapResponse);
             }
 
             return BadRequest();
         }
 
         [HttpPatch]
-        [Route("mark-task-completed/{id}")]
-        public async Task<IActionResult> MarkTaskCompleted(int id)
+        [Route("mark-task-completed/{id}/{rowVersion}")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> MarkTaskCompleted(int id, string rowVersion)
         {
-            await _taskService.MarkTaskCompleted(id);
+            var response = await _taskService.MarkTaskCompleted(id, rowVersion);
 
-            return Ok();
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("delete-task/{id}")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteTask(int id)
         {
             await _taskService.DeleteTask(id);

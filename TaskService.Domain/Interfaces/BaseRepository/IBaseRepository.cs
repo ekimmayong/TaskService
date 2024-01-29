@@ -11,6 +11,6 @@ namespace TaskService.Domain.Interfaces.BaseRepository
         Task UpdateAsync(T entity, byte[] rowVersion);
         Task DeleteAsync(T entity);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
-        void SetModified(object entity);
+        void SetModified(object entity, byte[] rowVersion);
     }
 }
