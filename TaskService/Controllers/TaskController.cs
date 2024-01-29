@@ -71,7 +71,7 @@ namespace TaskService.Controllers
 
         [HttpPut]
         [Route("update-task/{id}")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TaskModelDTO))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(string))]
         [SwaggerResponse(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status401Unauthorized)]
         [SwaggerResponse(StatusCodes.Status409Conflict)]
@@ -82,8 +82,7 @@ namespace TaskService.Controllers
                 var task = _mapper.Map<TaskModel>(model);
                 var response = await _taskService.UpdateTask(id, task);
 
-                var mapResponse = _mapper.Map<TaskModelDTO>(response);
-                return Ok(mapResponse);
+                return Ok(response);
             }
 
             return BadRequest();
@@ -91,6 +90,7 @@ namespace TaskService.Controllers
 
         [HttpPatch]
         [Route("mark-task-completed/{id}/{rowVersion}")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(string))]
         [SwaggerResponse(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status401Unauthorized)]
         [SwaggerResponse(StatusCodes.Status409Conflict)]
@@ -107,9 +107,9 @@ namespace TaskService.Controllers
         [SwaggerResponse(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteTask(int id)
         {
-            await _taskService.DeleteTask(id);
+            var response = await _taskService.DeleteTask(id);
 
-            return Ok();
+            return Ok(response);
         }
     }
 }

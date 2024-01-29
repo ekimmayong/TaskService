@@ -27,14 +27,18 @@ namespace TaskService.Domain.Services
             return result;
         }
 
-        public async Task DeleteTask(int id)
+        public async Task<string> DeleteTask(int id)
         {
             var item = await _taskRepository.GetByIdAsync(id);
             if(item != null)
             {
                 await _taskRepository.DeleteAsync(item);
                 await _taskRepository.SaveChangesAsync();
+
+                return "Deleted Sucessfully.";
             }
+
+            return "Item not found.";
         }
 
         public async Task<IEnumerable<TaskModel>> GetAllTasks()
@@ -47,10 +51,10 @@ namespace TaskService.Domain.Services
             return await _taskRepository.GetByIdAsync(id);
         }
 
-        public async Task<TaskModel> UpdateTask(int id, TaskModel model)
+        public async Task<string> UpdateTask(int id, TaskModel model)
         {
             var item = await _taskRepository.GetByIdAsync(id);
-            if(item != null)
+            if(item != null && item.IsActive)
             {
                 item.TaskName = model.TaskName;
                 item.Description = model.Description;
@@ -60,9 +64,11 @@ namespace TaskService.Domain.Services
 
                 await _taskRepository.UpdateAsync(item, model.RowVersion);
                 await _taskRepository.SaveChangesAsync();
+
+                return "Successfully Updated Data";
             }
 
-            return model;
+            return "Task is not Active";
         }
 
         public async Task<string> MarkTaskCompleted(int id, string rowVersion)
@@ -73,6 +79,7 @@ namespace TaskService.Domain.Services
             if(item != null && item.IsComplete != true)
             {
                 item.IsComplete = true;
+                item.IsActive = false;
                 item.CompletedTimeStamp = DateTime.UtcNow;
                 item.RowVersion = Encoding.ASCII.GetBytes(DateTime.UtcNow.ToString());
 
@@ -82,7 +89,7 @@ namespace TaskService.Domain.Services
                 return "Task Completed";
             }
 
-            return "No Task to complete or task already completed";
+            return "Task already completed";
         }
     }
 }
