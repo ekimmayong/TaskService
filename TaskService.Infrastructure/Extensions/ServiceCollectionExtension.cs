@@ -48,17 +48,16 @@ namespace TaskService.Infrastructure.Extensions
             });
         }
 
-        // Configure and register Dependency injection
+        // IserviceCollection Extension to Register Dependencies
+        //Register interfaces and their Implementation for Dependency injection
         public static IServiceCollection AddApplicationDependencyInjection(this IServiceCollection services)
         {
-            // Context DI
+
             services.AddScoped<IApplicationContext, ApplicationDbContext>();
 
-            // Base Repository DI
             services.AddScoped<IBaseRepository<TaskModel>, TaskRepository>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
 
-            //Services DI
             services.AddScoped<ITasksService, TasksService>();
             services.AddScoped<IIdentityService, IdentityService>();
 
